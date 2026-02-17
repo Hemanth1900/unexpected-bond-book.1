@@ -98,9 +98,10 @@ body{
 
 /* Text area */
 .text-content{
-    margin-top:50px;
-    margin-bottom:90px;
+    margin-top:70px;   /* push text below header */
+    margin-bottom:100px;
 }
+
 
 /* DROP CAP */
 .text-content p:first-child::first-letter{
