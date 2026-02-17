@@ -108,16 +108,18 @@ function renderPage(){
 
     /* Story pages */
     el.className='page';
-    el.innerHTML = `
+ el.innerHTML = `
+    <div class="book-header">
         <div class="header-left">Ayush A.</div>
         <div class="header-right">${page.title}</div>
+    </div>
 
-        <div class="text-content">
-            <p>${page.content}</p>
-        </div>
+    <div class="text-content">
+        <p>${page.content}</p>
+    </div>
 
-        <div class="page-number">${currentPage}</div>
-    `;
+    <div class="page-number">${currentPage}</div>
+`;
 }
 
 
