@@ -51,21 +51,25 @@ function paginate(text){
 
     let words = text.split(" ");
     let pages = [];
-    let pageText = "";
+    let pageWords = [];
 
     for(let i=0;i<words.length;i++){
 
-        pageText += words[i] + " ";
-        temp.innerHTML = "<p>"+pageText+"</p>";
+        pageWords.push(words[i]);
+        temp.innerHTML = "<p>"+pageWords.join(" ")+"</p>";
 
         if(temp.scrollHeight > 650){
 
-            pages.push(pageText);
-            pageText = words[i] + " ";
+            pageWords.pop(); // remove overflowing word
+            pages.push(pageWords.join(" "));
+
+            pageWords = [words[i]]; // start next page clean
         }
     }
 
-    pages.push(pageText);
+    if(pageWords.length){
+        pages.push(pageWords.join(" "));
+    }
 
     document.body.removeChild(temp);
 
