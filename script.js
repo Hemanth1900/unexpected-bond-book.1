@@ -11,7 +11,7 @@ async function loadBook(){
 
     for(const chapter of chapters){
 
-        // Add chapter opening page
+        // Chapter opening page
         pages.push({
             type:'opening',
             number: chapterIndex,
@@ -20,7 +20,7 @@ async function loadBook(){
 
         const txt = await fetch(chapter.file).then(r=>r.text());
 
-        const split = paginate(txt, 1000);
+        const split = paginate(txt, 180); // word-based feel
 
         split.forEach(p=>{
             pages.push({
@@ -36,12 +36,15 @@ async function loadBook(){
     renderPage();
 }
 
-/* Pagination */
-function paginate(text, size){
-    let arr=[];
-    for(let i=0;i<text.length;i+=size){
-        arr.push(text.substring(i,i+size));
+/* Pagination (prevents word cutting) */
+function paginate(text, wordsPerPage){
+    let words = text.split(' ');
+    let arr = [];
+
+    for(let i=0;i<words.length;i+=wordsPerPage){
+        arr.push(words.slice(i,i+wordsPerPage).join(' '));
     }
+
     return arr;
 }
 
@@ -51,7 +54,7 @@ function renderPage(){
     const page = pages[currentPage];
     const el = document.getElementById('page');
 
-    // Chapter first page
+    // Opening chapter page
     if(page.type==='opening'){
         el.className='page chapter-opening';
         el.innerHTML = `
@@ -61,19 +64,21 @@ function renderPage(){
         return;
     }
 
-    // Normal pages
+    // Normal novel pages
     el.className='page';
     el.innerHTML = `
         <div class="header-left">Ayush A.</div>
         <div class="header-right">${page.title}</div>
 
-        ${page.content}
+        <div class="text-content">
+            ${page.content}
+        </div>
 
-        <div class="page-number">${currentPage}</div>
+        <div class="page-number">${currentPage + 1}</div>
     `;
 }
 
-/* Swipe + tap navigation */
+/* Swipe navigation */
 
 let startX=0;
 
@@ -87,6 +92,8 @@ document.addEventListener('touchend',e=>{
     if(diff<-50) nextPage();
     if(diff>50) prevPage();
 });
+
+/* Tap navigation */
 
 document.addEventListener('click',e=>{
     if(e.clientX>window.innerWidth/2) nextPage();
