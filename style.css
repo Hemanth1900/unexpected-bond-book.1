@@ -49,8 +49,9 @@ body{
     text-align:center;
     display:flex;
     flex-direction:column;
-    justify-content:flex-start;
-    padding-top:140px;
+    justify-content:center;   /* center vertically */
+    align-items:center;
+    height:100%;
 }
 
 .chapter-number{
