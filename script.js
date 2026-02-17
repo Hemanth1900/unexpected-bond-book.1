@@ -7,22 +7,30 @@ async function loadBook(){
     const res = await fetch('chapters.json');
     const chapters = await res.json();
 
-    pages.push({type:'cover'});
+    let chapterIndex = 1;
 
     for(const chapter of chapters){
 
+        // Add chapter opening page
+        pages.push({
+            type:'opening',
+            number: chapterIndex,
+            title: chapter.title
+        });
+
         const txt = await fetch(chapter.file).then(r=>r.text());
 
-        const split = paginate(txt, 900);
+        const split = paginate(txt, 1000);
 
-        split.forEach((p,i)=>{
+        split.forEach(p=>{
             pages.push({
                 type:'text',
                 title: chapter.title,
-                content: p,
-                number: pages.length
+                content: p
             });
         });
+
+        chapterIndex++;
     }
 
     renderPage();
@@ -43,21 +51,30 @@ function renderPage(){
     const page = pages[currentPage];
     const el = document.getElementById('page');
 
-    if(page.type==='cover'){
-        el.className='page cover';
-        el.innerHTML='Swipe to begin';
+    // Chapter first page
+    if(page.type==='opening'){
+        el.className='page chapter-opening';
+        el.innerHTML = `
+            <div class="chapter-number">Chapter ${page.number}</div>
+            <div class="chapter-title">${page.title}</div>
+        `;
         return;
     }
 
+    // Normal pages
     el.className='page';
     el.innerHTML = `
-        <div class="chapter-title">${page.title}</div>
+        <div class="header-left">Ayush A.</div>
+        <div class="header-right">${page.title}</div>
+
         ${page.content}
+
         <div class="page-number">${currentPage}</div>
     `;
 }
 
 /* Swipe + tap navigation */
+
 let startX=0;
 
 document.addEventListener('touchstart',e=>{
@@ -77,6 +94,7 @@ document.addEventListener('click',e=>{
 });
 
 /* Navigation */
+
 function nextPage(){
     if(currentPage < pages.length-1){
         currentPage++;
