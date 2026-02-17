@@ -24,7 +24,6 @@ async function loadBook(){
         });
 
         const txt = await fetch(chapter.file).then(r=>r.text());
-
         const split = paginate(txt);
 
         split.forEach(p=>{
@@ -42,44 +41,23 @@ async function loadBook(){
 }
 
 
-/* REAL PAGINATION — based on visible page height */
+/* Pagination */
 function paginate(text){
 
-    const temp = document.createElement("div");
-    temp.style.position = "absolute";
-    temp.style.visibility = "hidden";
-    temp.style.width = "560px";
-    temp.style.fontSize = "18px";
-    temp.style.lineHeight = "1.9";
-    temp.style.fontFamily = "'Libre Baskerville', serif";
+    const words = text.split(" ");
+    let arr = [];
+    let temp = [];
 
-    document.body.appendChild(temp);
-
-    let words = text.split(" ");
-    let result = [];
-    let pageWords = [];
-
-    for(let i=0;i<words.length;i++){
-
-        pageWords.push(words[i]);
-        temp.innerHTML = "<p>"+pageWords.join(" ")+"</p>";
-
-        if(temp.scrollHeight > 650){
-
-            pageWords.pop();
-            result.push(pageWords.join(" "));
-
-            pageWords = [words[i]];
+    words.forEach(word=>{
+        temp.push(word);
+        if(temp.join(" ").length > 900){
+            arr.push(temp.join(" "));
+            temp=[];
         }
-    }
+    });
 
-    if(pageWords.length){
-        result.push(pageWords.join(" "));
-    }
-
-    document.body.removeChild(temp);
-
-    return result;
+    arr.push(temp.join(" "));
+    return arr;
 }
 
 
@@ -89,14 +67,16 @@ function renderPage(){
     const page = pages[currentPage];
     const el = document.getElementById('page');
 
-    /* COVER PAGE */
+    if(!page || !el) return;
+
+    /* COVER */
     if(page.type==='cover'){
         el.className='page cover-page';
         el.innerHTML='';
         return;
     }
 
-    /* Chapter opening page */
+    /* CHAPTER OPENING */
     if(page.type==='opening'){
         el.className='page chapter-opening';
         el.innerHTML = `
@@ -106,48 +86,29 @@ function renderPage(){
         return;
     }
 
-    /* Story pages */
+    /* STORY PAGE */
     el.className='page';
- el.innerHTML = `
-    <div class="book-header">
-        <div class="header-left">Ayush A.</div>
-        <div class="header-right">${page.title}</div>
-    </div>
+    el.innerHTML = `
+        <div class="book-header">
+            <span class="header-left">Ayush A.</span>
+            <span class="header-right">${page.title}</span>
+        </div>
 
-    <div class="text-content">
-        <p>${page.content}</p>
-    </div>
+        <div class="text-content">
+            <p>${page.content}</p>
+        </div>
 
-    <div class="page-number">${currentPage}</div>
-`;
+        <div class="page-number">${currentPage}</div>
+    `;
 }
 
 
-/* Swipe navigation */
-
-let startX=0;
-
-document.addEventListener('touchstart',e=>{
-    startX=e.touches[0].clientX;
-});
-
-document.addEventListener('touchend',e=>{
-    let diff=e.changedTouches[0].clientX-startX;
-
-    if(diff<-50) nextPage();
-    if(diff>50) prevPage();
-});
-
-
-/* Tap navigation */
+/* Navigation */
 
 document.addEventListener('click',e=>{
-    if(e.clientX>window.innerWidth/2) nextPage();
+    if(e.clientX > window.innerWidth/2) nextPage();
     else prevPage();
 });
-
-
-/* Navigation */
 
 function nextPage(){
     if(currentPage < pages.length-1){
@@ -162,8 +123,5 @@ function prevPage(){
         renderPage();
     }
 }
-
-
-/* Start */
 
 loadBook();
