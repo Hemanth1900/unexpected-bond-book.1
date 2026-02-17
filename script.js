@@ -7,6 +7,11 @@ async function loadBook(){
     const res = await fetch('chapters.json');
     const chapters = await res.json();
 
+    // COVER PAGE FIRST
+    pages.push({
+        type:'cover'
+    });
+
     let chapterIndex = 1;
 
     for(const chapter of chapters){
@@ -36,7 +41,7 @@ async function loadBook(){
     renderPage();
 }
 
-/* REAL PAGINATION — based on visible page height */
+/* PAGINATION based on page height */
 function paginate(text){
 
     const temp = document.createElement("div");
@@ -60,10 +65,9 @@ function paginate(text){
 
         if(temp.scrollHeight > 650){
 
-            pageWords.pop(); // remove overflowing word
+            pageWords.pop();
             pages.push(pageWords.join(" "));
-
-            pageWords = [words[i]]; // start next page clean
+            pageWords = [words[i]];
         }
     }
 
@@ -82,7 +86,21 @@ function renderPage(){
     const page = pages[currentPage];
     const el = document.getElementById('page');
 
-    // Opening chapter page
+    /* COVER PAGE */
+    if(page.type==='cover'){
+        el.className='page cover-page';
+        el.innerHTML = `
+            <div class="cover-overlay">
+                <div class="cover-text">
+                    <div class="book-title">Unexpected Bond, Unexpected Goodbye</div>
+                    <div class="book-author">Ayush A.</div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    /* CHAPTER OPENING */
     if(page.type==='opening'){
         el.className='page chapter-opening';
         el.innerHTML = `
@@ -92,7 +110,7 @@ function renderPage(){
         return;
     }
 
-    // Normal story pages
+    /* STORY PAGES */
     el.className='page';
     el.innerHTML = `
         <div class="header-left">Ayush A.</div>
@@ -145,4 +163,3 @@ function prevPage(){
 }
 
 loadBook();
-
