@@ -20,7 +20,7 @@ async function loadBook(){
 
         const txt = await fetch(chapter.file).then(r=>r.text());
 
-        const split = paginate(txt, 180); // word-based feel
+        const split = paginate(txt);
 
         split.forEach(p=>{
             pages.push({
@@ -36,16 +36,40 @@ async function loadBook(){
     renderPage();
 }
 
-/* Pagination (prevents word cutting) */
-function paginate(text, wordsPerPage){
-    let words = text.split(' ');
-    let arr = [];
+/* REAL PAGINATION — based on visible page height */
+function paginate(text){
 
-    for(let i=0;i<words.length;i+=wordsPerPage){
-        arr.push(words.slice(i,i+wordsPerPage).join(' '));
+    const temp = document.createElement("div");
+    temp.style.position = "absolute";
+    temp.style.visibility = "hidden";
+    temp.style.width = "560px";
+    temp.style.fontSize = "18px";
+    temp.style.lineHeight = "1.9";
+    temp.style.fontFamily = "'Libre Baskerville', serif";
+
+    document.body.appendChild(temp);
+
+    let words = text.split(" ");
+    let pages = [];
+    let pageText = "";
+
+    for(let i=0;i<words.length;i++){
+
+        pageText += words[i] + " ";
+        temp.innerHTML = "<p>"+pageText+"</p>";
+
+        if(temp.scrollHeight > 650){
+
+            pages.push(pageText);
+            pageText = words[i] + " ";
+        }
     }
 
-    return arr;
+    pages.push(pageText);
+
+    document.body.removeChild(temp);
+
+    return pages;
 }
 
 /* Render page */
@@ -64,14 +88,14 @@ function renderPage(){
         return;
     }
 
-    // Normal novel pages
+    // Normal story pages
     el.className='page';
     el.innerHTML = `
         <div class="header-left">Ayush A.</div>
         <div class="header-right">${page.title}</div>
 
         <div class="text-content">
-            ${page.content}
+            <p>${page.content}</p>
         </div>
 
         <div class="page-number">${currentPage + 1}</div>
@@ -117,3 +141,4 @@ function prevPage(){
 }
 
 loadBook();
+
