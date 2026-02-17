@@ -1,6 +1,6 @@
 body{
     margin:0;
-    background:#ffffff;
+    background:#e9e2d8;   /* soft book table color */
     font-family:'Libre Baskerville', serif;
 }
 
@@ -12,23 +12,35 @@ body{
     align-items:center;
 }
 
-/* Page */
+/* Page frame */
 #page-container{
     width:100%;
     max-width:700px;
     height:100vh;
     overflow:hidden;
     position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
+/* Actual page */
 .page{
-    height:100%;
-    padding:80px 60px 110px;
+    width:90%;
+    height:90%;
+    padding:80px 70px 110px;
     background:#ffffff;
     line-height:1.9;
     font-size:18px;
     text-align:justify;
     position:relative;
+
+    /* THIS CREATES PAGE FEEL */
+    box-shadow:
+        0 12px 35px rgba(0,0,0,0.18),
+        0 3px 8px rgba(0,0,0,0.08);
+
+    border-radius:4px;
 }
 
 /* Chapter first page layout */
