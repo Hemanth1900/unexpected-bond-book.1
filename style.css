@@ -1,0 +1,60 @@
+body{
+    margin:0;
+    background:#efe9df;
+    font-family:'Libre Baskerville', serif;
+}
+
+/* Reader container */
+#reader{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Page */
+#page-container{
+    width:100%;
+    max-width:650px;
+    height:100vh;
+    overflow:hidden;
+    position:relative;
+}
+
+.page{
+    height:100%;
+    padding:60px 40px 90px;
+    background:#f6f1e7;
+    line-height:1.9;
+    font-size:18px;
+    text-align:justify;
+    transition:transform .35s ease;
+}
+
+/* Cover */
+.cover{
+    background:url('cover.jpg') center/cover no-repeat;
+    color:white;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding:60px;
+    font-size:28px;
+    font-family:'Playfair Display', serif;
+    text-align:center;
+}
+
+/* Chapter heading */
+.chapter-title{
+    font-family:'Playfair Display', serif;
+    font-size:32px;
+    margin-bottom:25px;
+}
+
+.page-number{
+    position:absolute;
+    bottom:20px;
+    right:30px;
+    font-size:12px;
+    opacity:.6;
+}
