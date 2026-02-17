@@ -81,11 +81,12 @@ body{
 .text-content p:first-child::first-letter{
     float:left;
     font-size:64px;
-    line-height:0.9;
+    line-height:0.8;
     padding-right:12px;
-    margin-top:6px;
+    margin-top:2px;
     font-family:'Playfair Display', serif;
 }
+
 
 
 /* FOOTER */
