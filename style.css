@@ -70,25 +70,25 @@ body{
 }
 
 /* Header */
-.header-left{
-    position:absolute;
-    top:26px;
-    left:70px;
+.book-header{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     font-size:12px;
     opacity:.65;
     letter-spacing:1px;
-    z-index:5;
+    margin-bottom:40px;
+}
+
+.header-left{
+    text-align:left;
 }
 
 .header-right{
-    position:absolute;
-    top:26px;
-    right:70px;
-    font-size:12px;
-    opacity:.65;
-    letter-spacing:1px;
-    z-index:5;
+    text-align:right;
 }
+
 
 /* Footer */
 .page-number{
