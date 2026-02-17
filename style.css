@@ -124,3 +124,30 @@ body{
     padding-top:6px;
     font-family:'Playfair Display', serif;
 }
+.cover-page{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.cover-inner{
+    max-width:500px;
+}
+
+.book-title{
+    font-family:'Playfair Display', serif;
+    font-size:44px;
+    margin-bottom:20px;
+}
+
+.book-author{
+    font-size:18px;
+    opacity:.7;
+    margin-bottom:40px;
+}
+
+.cover-hint{
+    font-size:14px;
+    opacity:.5;
+}
