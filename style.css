@@ -1,6 +1,6 @@
 body{
     margin:0;
-    background:#efe9df;
+    background:#ffffff;
     font-family:'Libre Baskerville', serif;
 }
 
@@ -15,7 +15,7 @@ body{
 /* Page */
 #page-container{
     width:100%;
-    max-width:650px;
+    max-width:700px;
     height:100vh;
     overflow:hidden;
     position:relative;
@@ -23,38 +23,56 @@ body{
 
 .page{
     height:100%;
-    padding:60px 40px 90px;
-    background:#f6f1e7;
+    padding:80px 60px 110px;
+    background:#ffffff;
     line-height:1.9;
     font-size:18px;
     text-align:justify;
-    transition:transform .35s ease;
+    position:relative;
 }
 
-/* Cover */
-.cover{
-    background:url('cover.jpg') center/cover no-repeat;
-    color:white;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    padding:60px;
-    font-size:28px;
-    font-family:'Playfair Display', serif;
+/* Chapter first page layout */
+.chapter-opening{
     text-align:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
 
-/* Chapter heading */
+.chapter-number{
+    font-family:'Playfair Display', serif;
+    font-size:22px;
+    margin-bottom:15px;
+}
+
 .chapter-title{
     font-family:'Playfair Display', serif;
-    font-size:32px;
-    margin-bottom:25px;
+    font-size:36px;
+    margin-bottom:60px;
 }
 
+/* Header for next pages */
+.header-left{
+    position:absolute;
+    top:25px;
+    left:60px;
+    font-size:13px;
+    opacity:.7;
+}
+
+.header-right{
+    position:absolute;
+    top:25px;
+    right:60px;
+    font-size:13px;
+    opacity:.7;
+}
+
+/* Page number */
 .page-number{
     position:absolute;
-    bottom:20px;
-    right:30px;
+    bottom:25px;
+    right:60px;
     font-size:12px;
     opacity:.6;
 }
