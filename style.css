@@ -124,30 +124,41 @@ body{
     padding-top:6px;
     font-family:'Playfair Display', serif;
 }
+
+/* COVER PAGE (image) */
+
 .cover-page{
+    background:url("cover.jpg") center/cover no-repeat;
     display:flex;
     justify-content:center;
     align-items:center;
-    text-align:center;
+    padding:0;
+    box-shadow:none;
+    border-radius:3px;
 }
 
-.cover-inner{
-    max-width:500px;
+.cover-overlay{
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.15);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.cover-text{
+    text-align:center;
+    color:white;
 }
 
 .book-title{
     font-family:'Playfair Display', serif;
-    font-size:44px;
-    margin-bottom:20px;
+    font-size:42px;
+    margin-bottom:15px;
 }
 
 .book-author{
     font-size:18px;
-    opacity:.7;
-    margin-bottom:40px;
+    opacity:.85;
 }
 
-.cover-hint{
-    font-size:14px;
-    opacity:.5;
-}
