@@ -26,11 +26,11 @@ body{
 .page{
     width:90%;
     height:92%;
-    padding:60px 60px 100px;   /* adjusted for wider text */
+    padding:60px 80px 100px;
     background:#fdfaf4;
     line-height:1.9;
     font-size:18px;
-    text-align:justify;
+    text-align:left;   /* FIX: removed justify causing crease */
     position:relative;
 
     display:flex;
@@ -43,24 +43,9 @@ body{
     border-radius:3px;
 }
 
-/* BOOK PAGE CREASE EFFECT */
-.page::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:50%;
-    width:1px;
-    height:100%;
-    background:rgba(0,0,0,0.08);
-    box-shadow:0 0 18px rgba(0,0,0,0.12);
-    transform:translateX(-50%);
-}
-
-/* COVER PAGE — full image visible (no zoom, no crop) */
+/* COVER PAGE */
 .cover-page{
-    background:url("cover.jpg") center center no-repeat;
-    background-size:contain;
-    background-color:#e9e2d8;
+    background:url("cover.jpg") center/contain no-repeat;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -107,11 +92,13 @@ body{
 .header-left{}
 .header-right{}
 
-/* TEXT AREA — widened for paragraph feel */
+/* TEXT AREA */
 .text-content{
     flex:1;
-    max-width:640px;   /* increased width */
+    max-width:600px;      /* FIX: widen paragraph */
     margin:0 auto;
+    text-align:left;      /* FIX: natural paragraph flow */
+    hyphens:auto;
 }
 
 /* Paragraph spacing */
