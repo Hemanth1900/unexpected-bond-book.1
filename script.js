@@ -37,6 +37,7 @@ async function loadBook(){
         chapterIndex++;
     }
 
+    restoreProgress();
     renderPage();
 }
 
@@ -100,19 +101,50 @@ function renderPage(){
 
         <div class="page-number">${currentPage}</div>
     `;
+
+    /* SATURDAY MESSAGE ON LAST PAGE */
+    if(currentPage === pages.length-1){
+        document.querySelector(".text-content").insertAdjacentHTML("beforeend", `
+            <div class="next-release-note">
+                <p>You’ve reached the latest chapter.</p>
+                <h3>New chapter releases Saturday.</h3>
+                <span>Come back and continue the story.</span>
+            </div>
+        `);
+    }
 }
 
 
-/* Navigation */
+/* DESKTOP CLICK NAVIGATION */
 
 document.addEventListener('click',e=>{
     if(e.clientX > window.innerWidth/2) nextPage();
     else prevPage();
 });
 
+
+/* MOBILE SWIPE NAVIGATION */
+
+let startX = 0;
+
+document.addEventListener("touchstart",e=>{
+    startX = e.touches[0].clientX;
+});
+
+document.addEventListener("touchend",e=>{
+    let diff = e.changedTouches[0].clientX - startX;
+
+    if(diff < -50) nextPage();
+    if(diff > 50) prevPage();
+});
+
+
+/* PAGE NAVIGATION */
+
 function nextPage(){
     if(currentPage < pages.length-1){
         currentPage++;
+        saveProgress();
         renderPage();
     }
 }
@@ -120,7 +152,22 @@ function nextPage(){
 function prevPage(){
     if(currentPage>0){
         currentPage--;
+        saveProgress();
         renderPage();
+    }
+}
+
+
+/* SAVE & RESTORE READING PROGRESS */
+
+function saveProgress(){
+    localStorage.setItem("lastPage", currentPage);
+}
+
+function restoreProgress(){
+    const saved = localStorage.getItem("lastPage");
+    if(saved){
+        currentPage = parseInt(saved);
     }
 }
 
