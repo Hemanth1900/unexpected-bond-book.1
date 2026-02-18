@@ -26,7 +26,7 @@ body{
 .page{
     width:100%;
     height:100%;
-    padding:70px 28px 90px;
+    padding:95px 28px 90px;
     background:#fdfaf4;
     line-height:1.9;
     font-size:18px;
@@ -36,9 +36,8 @@ body{
     display:flex;
     flex-direction:column;
 
-    box-shadow:
-        0 30px 70px rgba(0,0,0,0.35),
-        0 10px 20px rgba(0,0,0,0.25);
+    box-shadow:none;
+
 
     border-radius:3px;
 }
@@ -137,12 +136,28 @@ body{
 @media (max-width:600px){
 
     .page{
-        padding:60px 22px 80px;
+        padding:85px 22px 80px;
         font-size:17px;
     }
 
     .text-content{
         max-width:100%;
     }
+/* REMOVE CREASE LINE */
+.page::before,
+.page::after{
+    display:none !important;
+    content:none !important;
+    background:none !important;
+}
+    /* FORCE REMOVE CENTER LINE COMPLETELY */
+#page-container{
+    background:#e9e2d8;
+}
+
+.page{
+    background-clip:padding-box;
+}
+
 
 }
