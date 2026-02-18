@@ -24,13 +24,13 @@ body{
 
 /* Page */
 .page{
-    width:90%;
-    height:92%;
-    padding:60px 80px 100px;
+    width:100%;
+    height:100%;
+    padding:70px 28px 90px;
     background:#fdfaf4;
     line-height:1.9;
     font-size:18px;
-    text-align:left;   /* FIX: removed justify causing crease */
+    text-align:justify;
     position:relative;
 
     display:flex;
@@ -43,14 +43,24 @@ body{
     border-radius:3px;
 }
 
+/* REMOVE ANY CREASE / CENTER LINE */
+.page::before,
+.page::after{
+    display:none !important;
+    content:none !important;
+    background:none !important;
+}
+
 /* COVER PAGE */
 .cover-page{
-    background:url("cover.jpg") center/contain no-repeat;
+    background:url("cover.jpg") center center / contain no-repeat;
     display:flex;
     justify-content:center;
     align-items:center;
     padding:0;
     box-shadow:none;
+    width:100%;
+    height:100%;
 }
 
 /* Chapter opening page */
@@ -89,21 +99,19 @@ body{
     margin-bottom:20px;
 }
 
-.header-left{}
-.header-right{}
-
-/* TEXT AREA */
+/* TEXT AREA — FULL WIDTH FIX */
 .text-content{
     flex:1;
-    max-width:600px;      /* FIX: widen paragraph */
-    margin:0 auto;
-    text-align:left;      /* FIX: natural paragraph flow */
-    hyphens:auto;
+    max-width:100%;
+    margin:0;
+    padding:0 4px;
 }
 
 /* Paragraph spacing */
 .text-content p{
     margin-bottom:18px;
+    text-align:justify;
+    hyphens:auto;
 }
 
 /* DROP CAP */
@@ -124,4 +132,17 @@ body{
     letter-spacing:2px;
     margin-top:20px;
 }
-```0
+
+/* MOBILE OPTIMIZATION */
+@media (max-width:600px){
+
+    .page{
+        padding:60px 22px 80px;
+        font-size:17px;
+    }
+
+    .text-content{
+        max-width:100%;
+    }
+
+}
