@@ -158,6 +158,19 @@ body{
 .page{
     background-clip:padding-box;
 }
+    .next-release-note{
+    margin-top:60px;
+    padding:30px 20px;
+    text-align:center;
+    background:#f4efe7;
+    border-radius:6px;
+}
+
+.next-release-note h3{
+    font-family:'Playfair Display', serif;
+    font-size:22px;
+}
+
 
 
 }
