@@ -106,7 +106,7 @@ function renderPage(){
     if(currentPage === pages.length-1){
         document.querySelector(".text-content").insertAdjacentHTML("beforeend", `
             <div class="next-release-note">
-                <p>You’ve reached the latest chapter.</p>
+                <p>You’ve reached the last chapter.</p>
                 <h3>New chapter releases Saturday.</h3>
                 <span>Come back and continue the story.</span>
             </div>
