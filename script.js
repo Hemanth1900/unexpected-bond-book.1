@@ -7,9 +7,16 @@ async function loadBook(){
     const res = await fetch('chapters.json');
     const chapters = await res.json();
 
-    /* FIRST PAGE = COVER */
+    /* FIRST PAGE = SERIES COVER */
     pages.push({
-        type:'cover'
+        type:'image',
+        src:'seriescover.jpg'
+    });
+
+    /* SECOND PAGE = BOOK COVER */
+    pages.push({
+        type:'image',
+        src:'book1cover.jpg'
     });
 
     let chapterIndex = 1;
@@ -36,6 +43,12 @@ async function loadBook(){
 
         chapterIndex++;
     }
+
+    /* FINAL PAGE = END COVER */
+    pages.push({
+        type:'image',
+        src:'endcover.jpg'
+    });
 
     restoreProgress();
     renderPage();
@@ -70,10 +83,12 @@ function renderPage(){
 
     if(!page || !el) return;
 
-    /* COVER */
-    if(page.type==='cover'){
+    /* IMAGE COVER PAGE */
+    if(page.type==='image'){
         el.className='page cover-page';
-        el.innerHTML='';
+        el.innerHTML = `
+            <img src="${page.src}" class="cover-img"/>
+        `;
         return;
     }
 
@@ -102,13 +117,13 @@ function renderPage(){
         <div class="page-number">${currentPage}</div>
     `;
 
-    /* SATURDAY MESSAGE ON LAST PAGE */
-    if(currentPage === pages.length-1){
+    /* LAST PAGE MESSAGE (before end cover only) */
+    if(currentPage === pages.length-2){
         document.querySelector(".text-content").insertAdjacentHTML("beforeend", `
             <div class="next-release-note">
-                <p>You’ve reached the last chapter.</p>
-                <h3>New chapter releases Saturday.</h3>
-                <span>Come back and continue the story.</span>
+                <p>You’ve reached the end of Book 1.</p>
+                <h3>Book 2 — Unexpected Goodbye coming soon.</h3>
+                <span>The story continues...</span>
             </div>
         `);
     }
