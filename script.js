@@ -122,8 +122,10 @@ function renderPage(){
         document.querySelector(".text-content").insertAdjacentHTML("beforeend", `
             <div class="next-release-note">
                 <p>You’ve reached the end of Book 1.</p>
-                <h3>Book 2 — Unexpected Goodbye coming soon.</h3>
+                <h3>Book 2 — Unexpected Goodbye </h3>
+                  <h3>  coming soon.</h3>
                 <span>The story continues...</span>
+                <span> Next Tap </span>
             </div>
         `);
     }
