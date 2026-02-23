@@ -50,7 +50,7 @@ body{
 }
 
 /* COVER PAGE */
-cover-page{
+.cover-page{
 
     display:flex;
 
