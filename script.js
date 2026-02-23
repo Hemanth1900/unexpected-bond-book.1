@@ -1,29 +1,21 @@
 let pages = [];
 let currentPage = 0;
 
-/* Load chapters */
+/* ===============================
+   LOAD BOOK
+   =============================== */
+
 async function loadBook(){
 
     const res = await fetch('chapters.json');
     const chapters = await res.json();
 
-    /* FIRST PAGE = SERIES COVER */
-    pages.push({
-        type:'image',
-        src:'seriescover.jpg'
-    });
-
-    /* SECOND PAGE = BOOK COVER */
-    pages.push({
-        type:'image',
-        src:'book1cover.jpg'
-    });
+    pages.push({ type:'cover' });
 
     let chapterIndex = 1;
 
     for(const chapter of chapters){
 
-        /* Chapter opening page */
         pages.push({
             type:'opening',
             number: chapterIndex,
@@ -44,18 +36,16 @@ async function loadBook(){
         chapterIndex++;
     }
 
-    /* FINAL PAGE = END COVER */
-    pages.push({
-        type:'image',
-        src:'endcover.jpg'
-    });
-
     restoreProgress();
     renderPage();
+    createAmbienceButton();
 }
 
 
-/* Pagination */
+/* ===============================
+   PAGINATION
+   =============================== */
+
 function paginate(text){
 
     const words = text.split(" ");
@@ -75,7 +65,10 @@ function paginate(text){
 }
 
 
-/* Render page */
+/* ===============================
+   RENDER PAGE
+   =============================== */
+
 function renderPage(){
 
     const page = pages[currentPage];
@@ -83,16 +76,14 @@ function renderPage(){
 
     if(!page || !el) return;
 
-    /* IMAGE COVER PAGE */
-    if(page.type==='image'){
+    document.body.classList.remove("mood-night","mood-rain","mood-terrace","mood-lab");
+
+    if(page.type==='cover'){
         el.className='page cover-page';
-        el.innerHTML = `
-            <img src="${page.src}" class="cover-img"/>
-        `;
+        el.innerHTML='';
         return;
     }
 
-    /* CHAPTER OPENING */
     if(page.type==='opening'){
         el.className='page chapter-opening';
         el.innerHTML = `
@@ -102,7 +93,6 @@ function renderPage(){
         return;
     }
 
-    /* STORY PAGE */
     el.className='page';
     el.innerHTML = `
         <div class="book-header">
@@ -111,36 +101,135 @@ function renderPage(){
         </div>
 
         <div class="text-content">
-            <p>${page.content}</p>
+            <p>${autoDialogue(page.content)}</p>
         </div>
 
         <div class="page-number">${currentPage}</div>
     `;
 
-    /* LAST PAGE MESSAGE (before end cover only) */
-    if(currentPage === pages.length-2){
-        document.querySelector(".text-content").insertAdjacentHTML("beforeend", `
-            <div class="next-release-note">
-                <p>You’ve reached the end of Book 1.</p>
-                <h3>Book 2 — Unexpected Goodbye </h3>
-                  <h3>  coming soon.</h3>
-                <span>The story continues...</span>
-                <span> Next Tap </span>
-            </div>
-        `);
+    applyMoodByContent(page.content);
+}
+
+
+/* ===============================
+   AUTO DIALOGUE STYLING
+   =============================== */
+
+function autoDialogue(text){
+    return text.replace(/"([^"]+)"/g, '<span class="dialogue">"$1"</span>');
+}
+
+
+/* ===============================
+   AUTO MOOD DETECTION
+   =============================== */
+
+function applyMoodByContent(content){
+
+    const lower = content.toLowerCase();
+
+    if(lower.includes("rain")){
+        document.body.classList.add("mood-rain");
+    }
+    else if(lower.includes("terrace")){
+        document.body.classList.add("mood-terrace");
+    }
+    else if(lower.includes("night")){
+        document.body.classList.add("mood-night");
+    }
+    else if(lower.includes("lab")){
+        document.body.classList.add("mood-lab");
     }
 }
 
 
-/* DESKTOP CLICK NAVIGATION */
+/* ===============================
+   AMBIENCE BUTTON + SOUND
+   =============================== */
+
+let ambienceMode = 0;
+let ambienceAudio = null;
+
+const ambienceTracks = [
+    null,
+    "night.mp3",
+    "rain.mp3",
+    "terrace.mp3",
+    "lab.mp3"
+];
+
+function createAmbienceButton(){
+
+    if(document.getElementById("ambience-toggle")) return;
+
+    const btn = document.createElement("button");
+    btn.id = "ambience-toggle";
+    btn.innerText = "☾";
+
+    btn.onclick = toggleAmbience;
+
+    document.body.appendChild(btn);
+}
+
+function toggleAmbience(){
+
+    ambienceMode++;
+    if(ambienceMode > 4) ambienceMode = 0;
+
+    if(ambienceAudio){
+        ambienceAudio.pause();
+        ambienceAudio.currentTime = 0;
+    }
+
+    document.body.classList.remove(
+        "mood-night",
+        "mood-rain",
+        "mood-terrace",
+        "mood-lab"
+    );
+
+    switch(ambienceMode){
+
+        case 1:
+            document.body.classList.add("mood-night");
+            ambienceAudio = new Audio(ambienceTracks[1]);
+            break;
+
+        case 2:
+            document.body.classList.add("mood-rain");
+            ambienceAudio = new Audio(ambienceTracks[2]);
+            break;
+
+        case 3:
+            document.body.classList.add("mood-terrace");
+            ambienceAudio = new Audio(ambienceTracks[3]);
+            break;
+
+        case 4:
+            document.body.classList.add("mood-lab");
+            ambienceAudio = new Audio(ambienceTracks[4]);
+            break;
+
+        default:
+            ambienceAudio = null;
+    }
+
+    if(ambienceAudio){
+        ambienceAudio.loop = true;
+        ambienceAudio.volume = 0.35;
+        ambienceAudio.play();
+    }
+}
+
+
+/* ===============================
+   NAVIGATION
+   =============================== */
 
 document.addEventListener('click',e=>{
     if(e.clientX > window.innerWidth/2) nextPage();
     else prevPage();
 });
-
-
-/* MOBILE SWIPE NAVIGATION */
 
 let startX = 0;
 
@@ -150,13 +239,9 @@ document.addEventListener("touchstart",e=>{
 
 document.addEventListener("touchend",e=>{
     let diff = e.changedTouches[0].clientX - startX;
-
     if(diff < -50) nextPage();
     if(diff > 50) prevPage();
 });
-
-
-/* PAGE NAVIGATION */
 
 function nextPage(){
     if(currentPage < pages.length-1){
@@ -175,7 +260,9 @@ function prevPage(){
 }
 
 
-/* SAVE & RESTORE READING PROGRESS */
+/* ===============================
+   SAVE & RESTORE PROGRESS
+   =============================== */
 
 function saveProgress(){
     localStorage.setItem("lastPage", currentPage);
