@@ -81,7 +81,7 @@ if(page.type==='series-cover'){
 /* BOOK 1 COVER */
 if(page.type==='book-cover'){
     el.className='page cover-page';
-    el.innerHTML = `<img src="cover.jpg" class="cover-img">`;
+    el.innerHTML = `<img src="book1cover.jpg" class="cover-img">`;
     return;
 }
     /* CHAPTER OPENING */
