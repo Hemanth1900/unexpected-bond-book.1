@@ -1,21 +1,22 @@
 let pages = [];
 let currentPage = 0;
 
-/* ===============================
-   LOAD BOOK
-   =============================== */
-
+/* Load chapters */
 async function loadBook(){
 
     const res = await fetch('chapters.json');
     const chapters = await res.json();
 
-    pages.push({ type:'cover' });
+    /* FIRST PAGE = COVER */
+    pages.push({
+        type:'cover'
+    });
 
     let chapterIndex = 1;
 
     for(const chapter of chapters){
 
+        /* Chapter opening page */
         pages.push({
             type:'opening',
             number: chapterIndex,
@@ -38,14 +39,10 @@ async function loadBook(){
 
     restoreProgress();
     renderPage();
-    createAmbienceButton();
 }
 
 
-/* ===============================
-   PAGINATION
-   =============================== */
-
+/* Pagination */
 function paginate(text){
 
     const words = text.split(" ");
@@ -65,10 +62,7 @@ function paginate(text){
 }
 
 
-/* ===============================
-   RENDER PAGE
-   =============================== */
-
+/* Render page */
 function renderPage(){
 
     const page = pages[currentPage];
@@ -76,14 +70,14 @@ function renderPage(){
 
     if(!page || !el) return;
 
-    document.body.classList.remove("mood-night","mood-rain","mood-terrace","mood-lab");
-
+    /* COVER */
     if(page.type==='cover'){
         el.className='page cover-page';
         el.innerHTML='';
         return;
     }
 
+    /* CHAPTER OPENING */
     if(page.type==='opening'){
         el.className='page chapter-opening';
         el.innerHTML = `
@@ -93,6 +87,7 @@ function renderPage(){
         return;
     }
 
+    /* STORY PAGE */
     el.className='page';
     el.innerHTML = `
         <div class="book-header">
@@ -101,152 +96,24 @@ function renderPage(){
         </div>
 
         <div class="text-content">
-            <p>${autoDialogue(page.content)}</p>
+            <p>${page.content}</p>
         </div>
 
         <div class="page-number">${currentPage}</div>
     `;
-
-    applyMoodByContent(page.content);
 }
 
 
-/* ===============================
-   AUTO DIALOGUE STYLING
-   =============================== */
-
-function autoDialogue(text){
-    return text.replace(/"([^"]+)"/g, '<span class="dialogue">"$1"</span>');
-}
-
-
-/* ===============================
-   AUTO MOOD DETECTION
-   =============================== */
-
-function applyMoodByContent(content){
-
-    const lower = content.toLowerCase();
-
-    if(lower.includes("rain")){
-        document.body.classList.add("mood-rain");
-    }
-    else if(lower.includes("terrace")){
-        document.body.classList.add("mood-terrace");
-    }
-    else if(lower.includes("night")){
-        document.body.classList.add("mood-night");
-    }
-    else if(lower.includes("lab")){
-        document.body.classList.add("mood-lab");
-    }
-}
-
-
-/* ===============================
-   AMBIENCE BUTTON + SOUND
-   =============================== */
-
-let ambienceMode = 0;
-let ambienceAudio = null;
-
-const ambienceTracks = [
-    null,
-    "night.mp3",
-    "rain.mp3",
-    "terrace.mp3",
-    "lab.mp3"
-];
-
-function createAmbienceButton(){
-
-    if(document.getElementById("ambience-toggle")) return;
-
-    const btn = document.createElement("button");
-    btn.id = "ambience-toggle";
-    btn.innerText = "☾";
-
-    btn.onclick = toggleAmbience;
-
-    document.body.appendChild(btn);
-}
-
-function toggleAmbience(){
-
-    ambienceMode++;
-    if(ambienceMode > 4) ambienceMode = 0;
-
-    if(ambienceAudio){
-        ambienceAudio.pause();
-        ambienceAudio.currentTime = 0;
-    }
-
-    document.body.classList.remove(
-        "mood-night",
-        "mood-rain",
-        "mood-terrace",
-        "mood-lab"
-    );
-
-    switch(ambienceMode){
-
-        case 1:
-            document.body.classList.add("mood-night");
-            ambienceAudio = new Audio(ambienceTracks[1]);
-            break;
-
-        case 2:
-            document.body.classList.add("mood-rain");
-            ambienceAudio = new Audio(ambienceTracks[2]);
-            break;
-
-        case 3:
-            document.body.classList.add("mood-terrace");
-            ambienceAudio = new Audio(ambienceTracks[3]);
-            break;
-
-        case 4:
-            document.body.classList.add("mood-lab");
-            ambienceAudio = new Audio(ambienceTracks[4]);
-            break;
-
-        default:
-            ambienceAudio = null;
-    }
-
-    if(ambienceAudio){
-        ambienceAudio.loop = true;
-        ambienceAudio.volume = 0.35;
-        ambienceAudio.play();
-    }
-}
-
-
-/* ===============================
-   NAVIGATION
-   =============================== */
+/* Navigation */
 
 document.addEventListener('click',e=>{
     if(e.clientX > window.innerWidth/2) nextPage();
     else prevPage();
 });
 
-let startX = 0;
-
-document.addEventListener("touchstart",e=>{
-    startX = e.touches[0].clientX;
-});
-
-document.addEventListener("touchend",e=>{
-    let diff = e.changedTouches[0].clientX - startX;
-    if(diff < -50) nextPage();
-    if(diff > 50) prevPage();
-});
-
 function nextPage(){
     if(currentPage < pages.length-1){
         currentPage++;
-        saveProgress();
         renderPage();
     }
 }
@@ -254,24 +121,7 @@ function nextPage(){
 function prevPage(){
     if(currentPage>0){
         currentPage--;
-        saveProgress();
         renderPage();
-    }
-}
-
-
-/* ===============================
-   SAVE & RESTORE PROGRESS
-   =============================== */
-
-function saveProgress(){
-    localStorage.setItem("lastPage", currentPage);
-}
-
-function restoreProgress(){
-    const saved = localStorage.getItem("lastPage");
-    if(saved){
-        currentPage = parseInt(saved);
     }
 }
 
