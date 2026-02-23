@@ -7,11 +7,11 @@ async function loadBook(){
     const res = await fetch('chapters.json');
     const chapters = await res.json();
 
-    /* FIRST PAGE = COVER */
-    pages.push({
-        type:'cover'
-    });
+    /* FIRST PAGE = SERIES COVER + BOOK COVER */
+    pages.push({ type:'series-cover' });
+    pages.push({ type:'book-cover' });
 
+    
     let chapterIndex = 1;
 
     for(const chapter of chapters){
@@ -71,12 +71,19 @@ function renderPage(){
     if(!page || !el) return;
 
     /* COVER */
-    if(page.type==='cover'){
-        el.className='page cover-page';
-        el.innerHTML='';
-        return;
-    }
+   /* SERIES COVER */
+if(page.type==='series-cover'){
+    el.className='page cover-page';
+    el.innerHTML = `<img src="seriescover.jpg" class="cover-img">`;
+    return;
+}
 
+/* BOOK 1 COVER */
+if(page.type==='book-cover'){
+    el.className='page cover-page';
+    el.innerHTML = `<img src="cover.jpg" class="cover-img">`;
+    return;
+}
     /* CHAPTER OPENING */
     if(page.type==='opening'){
         el.className='page chapter-opening';
